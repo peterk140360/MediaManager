@@ -1,0 +1,15 @@
+exiftool "-CreateDate+=0:0:0 6:0:0" -overwrite_original "F:\Suedostasien\OLYMP\3_time\*.MOV"
+
+
+exiftool -DateTimeOriginal+="0:0:0 6:0:0" -overwrite_original F:\Suedostasien\OLYMP\3_time
+
+exiftool -DateTimeOriginal="2011:12:03 14:00:00" -overwrite_original F:\tosort-copy-from-nas-11-2023\IO-3GS\2011\12-11\vids\3GS_2011-12-03_140000.m4v
+exiftool -DateTimeOriginal="2015:09:07_12:00:00" -overwrite_original F:\tosort-copy-from-nas-11-2023\IO-5S\2015\09-15\foo\IMG_07146.jpg
+exiftool -DateTimeOriginal="2015:09:08_18:00:00" -overwrite_original F:\tosort-copy-from-nas-11-2023\IO-5S\2015\09-15\foo\IMG_07147.jpg
+
+exiftool "-DateTimeOriginal<FileModifyDate" -overwrite_original C:\Users\prior\Nextcloud\Photos\Whatsapp\5S\IMG_14746.JPG
+
+magick convert IMG_17225.png IMG_17225.jpg
+
+
+https://www.heise.de/select/ct/2016/15/1468839560140348

@@ -4,7 +4,7 @@
 # File:        03_CAM_DJI_Media_Manager.py
 # created:     01.02.2024 14:17
 # edited:
-#      
+#
 # Description: The "iPhone Media Manager" script is a versatile and efficient
 #              tool designed to simplify the organization and management of
 #              photos and videos captured using an iPhone or similar devices.
@@ -182,11 +182,11 @@ def rename_files(prefix, suffix):
     subprocess.run(["exiftool", "-ext", "jpg", "-FileName<DateTimeOriginal",
                    "-d", f"{prefix}%Y-%m-%d_%H%M%S%%-c_edit{suffix}.%%le", edit_folder])
     subprocess.run(["exiftool", "-ee", "-api", "QuickTimeUTC", "-ext", "mov",
-                   "-d", f"{prefix}%Y-%m-%d_%H%M%S%%-c{suffix}.%%le", "-filename<CreationDate", vids_folder]) # CreateDate
+                   "-d", f"{prefix}%Y-%m-%d_%H%M%S%%-c{suffix}.%%le", "-filename<CreateDate", vids_folder]) # CreateDate or CreationDate
     subprocess.run(["exiftool", "-ee", "-api", "QuickTimeUTC", "-ext", "mp4",
-                   "-d", f"{prefix}%Y-%m-%d_%H%M%S%%-c{suffix}.%%le", "-filename<CreationDate", vids_folder]) # CreateDate
+                   "-d", f"{prefix}%Y-%m-%d_%H%M%S%%-c{suffix}.%%le", "-filename<CreateDate", vids_folder]) # CreateDate (works for DJI) or CreationDate
     subprocess.run(["exiftool", "-ee", "-api", "QuickTimeUTC", "-ext", "m4v",
-                   "-d", f"{prefix}%Y-%m-%d_%H%M%S%%-c{suffix}.%%le", "-filename<CreationDate", vids_folder])
+                   "-d", f"{prefix}%Y-%m-%d_%H%M%S%%-c{suffix}.%%le", "-filename<CreatenDate", vids_folder])
     subprocess.run(["exiftool", "-ext", "orf", "-FileName<DateTimeOriginal",
                    "-d", f"{prefix}%Y-%m-%d_%H%M%S%%-c{suffix}.%%le", raw_folder])
     subprocess.run(["exiftool", "-ext", "dng", "-FileName<DateTimeOriginal",

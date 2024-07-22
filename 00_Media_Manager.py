@@ -116,10 +116,15 @@ def organize_files(source_folder):
                 shutil.move(os.path.join(source_folder, file),
                             os.path.join(jpg_folder, file))
                 jpg_count += 1
-        elif file.endswith('.MOV') or file.endswith('.MP4') or file.endswith('.m4v') or file.endswith('.mp4'):
-            shutil.move(os.path.join(source_folder, file),
-                        os.path.join(vids_folder, file))
-            vids_count += 1
+        elif file.endswith('.MOV') or file.endswith('.mov') or file.endswith('.MP4') or file.endswith('.m4v') or file.endswith('.mp4'):
+            if file.startswith('IMG_E'):
+                shutil.move(os.path.join(source_folder, file),
+                            os.path.join(edit_folder, file))
+                edit_count += 1
+            else:
+                shutil.move(os.path.join(source_folder, file),
+                            os.path.join(vids_folder, file))
+                vids_count += 1
         elif file.endswith('.HEIC'):
             shutil.move(os.path.join(source_folder, file),
                         os.path.join(heic_folder, file))
@@ -182,11 +187,13 @@ def rename_files(prefix, suffix):
     subprocess.run(["exiftool", "-ext", "jpg", "-FileName<DateTimeOriginal",
                    "-d", f"{prefix}%Y-%m-%d_%H%M%S%%-c_edit{suffix}.%%le", edit_folder])
     subprocess.run(["exiftool", "-ee", "-api", "QuickTimeUTC", "-ext", "mov",
+                   "-d", f"{prefix}%Y-%m-%d_%H%M%S%%-c{suffix}_edit.%%le", "-filename<CreationDate", edit_folder])
+    subprocess.run(["exiftool", "-ee", "-api", "QuickTimeUTC", "-ext", "mov",
                    "-d", f"{prefix}%Y-%m-%d_%H%M%S%%-c{suffix}.%%le", "-filename<CreateDate", vids_folder]) # CreateDate or CreationDate
     subprocess.run(["exiftool", "-ee", "-api", "QuickTimeUTC", "-ext", "mp4",
                    "-d", f"{prefix}%Y-%m-%d_%H%M%S%%-c{suffix}.%%le", "-filename<CreateDate", vids_folder]) # CreateDate (works for DJI) or CreationDate
     subprocess.run(["exiftool", "-ee", "-api", "QuickTimeUTC", "-ext", "m4v",
-                   "-d", f"{prefix}%Y-%m-%d_%H%M%S%%-c{suffix}.%%le", "-filename<CreatenDate", vids_folder])
+                   "-d", f"{prefix}%Y-%m-%d_%H%M%S%%-c{suffix}.%%le", "-filename<CreateDate", vids_folder])
     subprocess.run(["exiftool", "-ext", "orf", "-FileName<DateTimeOriginal",
                    "-d", f"{prefix}%Y-%m-%d_%H%M%S%%-c{suffix}.%%le", raw_folder])
     subprocess.run(["exiftool", "-ext", "dng", "-FileName<DateTimeOriginal",

@@ -37,7 +37,6 @@
 
 # from curses import raw
 import os
-from random import choices
 import shutil
 import subprocess
 
@@ -70,7 +69,7 @@ def create_folders():
     # Create destination folders if they don't exist
     for folder in [jpg_folder, edit_folder, vids_folder, heic_folder, aae_folder, screenshot_folder, raw_folder]:
         os.makedirs(folder, exist_ok=True)
-    print("Folders are created sucessfully")
+    print("\tFolders are created sucessfully")
 
 
 def organize_files(source_folder):
@@ -145,14 +144,14 @@ def organize_files(source_folder):
 
     file_count = jpg_count + edit_count + vids_count + heic_count + aae_count + screenshot_count + raw_count
 
-    print(f"{jpg_count} files moved to 'pics' folder")
-    print(f"{edit_count} files moved to 'edit' folder")
-    print(f"{vids_count} files moved to 'vids' folder")
-    print(f"{heic_count} files moved to 'heic-to-jpg' folder")
-    print(f"{aae_count} files moved to 'aae' folder")
-    print(f"{screenshot_count} files moved to 'screenshots' folder")
-    print(f"{raw_count} files moved to 'raw' folder")
-    print(f"\n{file_count} files moved in total")
+    print(f"\t{jpg_count} files moved to 'pics' folder")
+    print(f"\t{edit_count} files moved to 'edit' folder")
+    print(f"\t{vids_count} files moved to 'vids' folder")
+    print(f"\t{heic_count} files moved to 'heic-to-jpg' folder")
+    print(f"\t{aae_count} files moved to 'aae' folder")
+    print(f"\t{screenshot_count} files moved to 'screenshots' folder")
+    print(f"\t{raw_count} files moved to 'raw' folder")
+    print(f"\n\t{file_count} files moved in total")
 
 
 def convert_heic_to_jpg():
@@ -171,33 +170,45 @@ def convert_heic_to_jpg():
         conversion_count += 1
 
     if conversion_count == len(os.listdir(heic_folder)):
-        print(f"All {conversion_count } Files got converted.")
+        print(f"\tAll {conversion_count } Files got converted.")
     else:
         print("\tERROR: Number of converted Files is not equal to number of HEIC-Files - Check it")
 
 
 def rename_files(prefix, suffix):
-    global jpg_folder, edit_folder, vids_folder, converted_jpg_folder, screenshot_folder, raw_folder
-    subprocess.run(["exiftool", "-ext", "jpg", "-FileName<DateTimeOriginal",
-                   "-d", f"{prefix}%Y-%m-%d_%H%M%S%%-c{suffix}.%%le", jpg_folder])
-    subprocess.run(["exiftool", "-ext", "jpg", "-FileName<DateTimeOriginal",
-                   "-d", f"{prefix}%Y-%m-%d_%H%M%S%%-c{suffix}.%%le", converted_jpg_folder])
-    subprocess.run(["exiftool", "-ext", "png", "-FileName<DateTimeOriginal",
-                   "-d", f"{prefix}%Y-%m-%d_%H%M%S%%-c{suffix}.%%le", screenshot_folder])
-    subprocess.run(["exiftool", "-ext", "jpg", "-FileName<DateTimeOriginal",
-                   "-d", f"{prefix}%Y-%m-%d_%H%M%S%%-c_edit{suffix}.%%le", edit_folder])
-    subprocess.run(["exiftool", "-ee", "-api", "QuickTimeUTC", "-ext", "mov",
-                   "-d", f"{prefix}%Y-%m-%d_%H%M%S%%-c{suffix}_edit.%%le", "-filename<CreationDate", edit_folder])
-    subprocess.run(["exiftool", "-ee", "-api", "QuickTimeUTC", "-ext", "mov",
-                   "-d", f"{prefix}%Y-%m-%d_%H%M%S%%-c{suffix}.%%le", "-filename<CreateDate", vids_folder]) # CreateDate or CreationDate
-    subprocess.run(["exiftool", "-ee", "-api", "QuickTimeUTC", "-ext", "mp4",
-                   "-d", f"{prefix}%Y-%m-%d_%H%M%S%%-c{suffix}.%%le", "-filename<CreateDate", vids_folder]) # CreateDate (works for DJI) or CreationDate
-    subprocess.run(["exiftool", "-ee", "-api", "QuickTimeUTC", "-ext", "m4v",
-                   "-d", f"{prefix}%Y-%m-%d_%H%M%S%%-c{suffix}.%%le", "-filename<CreateDate", vids_folder])
-    subprocess.run(["exiftool", "-ext", "orf", "-FileName<DateTimeOriginal",
-                   "-d", f"{prefix}%Y-%m-%d_%H%M%S%%-c{suffix}.%%le", raw_folder])
-    subprocess.run(["exiftool", "-ext", "dng", "-FileName<DateTimeOriginal",
-                   "-d", f"{prefix}%Y-%m-%d_%H%M%S%%-c{suffix}.%%le", raw_folder])
+    global jpg_folder, edit_folder, converted_jpg_folder, screenshot_folder, vids_folder, raw_folder
+
+    if os.path.exists(jpg_folder):
+        subprocess.run(["exiftool", "-ext", "jpg", "-FileName<DateTimeOriginal",
+                        "-d", f"{prefix}%Y-%m-%d_%H%M%S%%-c{suffix}.%%le", jpg_folder])
+
+    if os.path.exists(edit_folder):
+        subprocess.run(["exiftool", "-ext", "jpg", "-FileName<DateTimeOriginal",
+                        "-d", f"{prefix}%Y-%m-%d_%H%M%S%%-c_edit{suffix}.%%le", edit_folder])
+        subprocess.run(["exiftool", "-ee", "-api", "QuickTimeUTC", "-ext", "mov",
+                        "-d", f"{prefix}%Y-%m-%d_%H%M%S%%-c{suffix}_edit.%%le", "-filename<CreationDate", edit_folder])
+
+    if os.path.exists(converted_jpg_folder):
+        subprocess.run(["exiftool", "-ext", "jpg", "-FileName<DateTimeOriginal",
+                        "-d", f"{prefix}%Y-%m-%d_%H%M%S%%-c{suffix}.%%le", converted_jpg_folder])
+
+    if os.path.exists(screenshot_folder):
+        subprocess.run(["exiftool", "-ext", "png", "-FileName<DateTimeOriginal",
+                        "-d", f"{prefix}%Y-%m-%d_%H%M%S%%-c{suffix}.%%le", screenshot_folder])
+
+    if os.path.exists(vids_folder):
+        subprocess.run(["exiftool", "-ee", "-api", "QuickTimeUTC", "-ext", "mov",
+                        "-d", f"{prefix}%Y-%m-%d_%H%M%S%%-c{suffix}.%%le", "-filename<CreateDate", vids_folder])  # CreateDate or CreationDate
+        subprocess.run(["exiftool", "-ee", "-api", "QuickTimeUTC", "-ext", "mp4",
+                        "-d", f"{prefix}%Y-%m-%d_%H%M%S%%-c{suffix}.%%le", "-filename<CreateDate", vids_folder])  # CreateDate (works for DJI) or CreationDate
+        subprocess.run(["exiftool", "-ee", "-api", "QuickTimeUTC", "-ext", "m4v",
+                        "-d", f"{prefix}%Y-%m-%d_%H%M%S%%-c{suffix}.%%le", "-filename<CreateDate", vids_folder])
+
+    if os.path.exists(raw_folder):
+        subprocess.run(["exiftool", "-ext", "orf", "-FileName<DateTimeOriginal",
+                        "-d", f"{prefix}%Y-%m-%d_%H%M%S%%-c{suffix}.%%le", raw_folder])
+        subprocess.run(["exiftool", "-ext", "dng", "-FileName<DateTimeOriginal",
+                        "-d", f"{prefix}%Y-%m-%d_%H%M%S%%-c{suffix}.%%le", raw_folder])
 
 
 def delete_heic_folder():
@@ -244,16 +255,16 @@ def move_files_one_level_up(folder_path):
 
 
 if __name__ == "__main__":
-    print("Choose an option:")
-    print("1. Custom")
-    print("2. CAM")
-    print("3. PRO")
-    print("4. DJI")
-    print("5. 3GS")
-    print("6. 5S")
+    print("\nChoose an option:")
+    print("\t1. Custom")
+    print("\t2. CAM")
+    print("\t3. PRO")
+    print("\t4. DJI")
+    print("\t5. 3GS")
+    print("\t6. 5S\n")
 
     choice = input("Enter the number of your choice: ")
-    
+
     if choice == "1":
         prefix = input("Enter your prefix: ")
         suffix = input("Enter your suffix: ")
@@ -279,23 +290,29 @@ if __name__ == "__main__":
 
     init_folders(source_folder)
 
-    input("\nPress Enter to create subfolders...")
+    # input("\nPress Enter to create subfolders...")
+    print("\n\n---------------------------CREATE SUBFOLDERS---------------------------")
     create_folders()
 
-    input("\nPress Enter to organize files...")
+    # input("\nPress Enter to organize files...")
+    print("\n\n----------------------------ORGANIZE FILES----------------------------")
     organize_files(source_folder)
 
-    input("\nPress Enter to convert heic to jpg...")
+    # input("\nPress Enter to convert heic to jpg...")
+    print("\n\n--------------------------CONVERT HEIC TO JPG--------------------------")
     convert_heic_to_jpg()
 
-    input("\nPress Enter to rename files...")
-    rename_files(prefix, suffix)
-
-#    input("\nPress Enter to move files one level up...")
-#    move_files_one_level_up(jpg_folder)
-
-    input("\nPress Enter to delete unused folders...")
+    # input("\nPress Enter to delete unused folders...")
+    print("\n\n-------------------------DELETE UNUSED FOLDERS-------------------------")
     delete_unused_folder()
 
-    print("\n\n----------------------DONE--------------------")
-    print("Files organized, converted, renamed and unused files and folders are deleted successfully.")
+    # input("\nPress Enter to rename files...")
+    print("\n\n-----------------------------RENAME FILES-----------------------------")
+    rename_files(prefix, suffix)
+
+    # input("\nPress Enter to move files one level up...")
+    # move_files_one_level_up(jpg_folder)
+
+    print("\n\n---------------------------------DONE---------------------------------")
+    print("\t     Files organized, converted, renamed and unused \n\t" 
+          "       files and folders are deleted successfully.")

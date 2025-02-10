@@ -59,5 +59,4 @@ Updated metadata for: CAM_2025-03-05_190010.orf -> 2025:03:05 19:00:10
 This project is licensed under the MIT License.
 
 ## Author
-
-[Your Name]
+peterk140360
